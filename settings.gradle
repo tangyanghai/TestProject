@@ -1,0 +1,1 @@
+include ':app', ':testtimer', ':comprocessvedio',':lib-permission', ':testmap', ':testupload',':imagepicker', ':testmediapicker'

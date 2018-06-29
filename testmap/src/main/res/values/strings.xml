@@ -1,0 +1,30 @@
+<resources>
+    <string name="app_name">TestMap</string>
+
+    <string-array name="map_name">
+        <item>高德地图</item>
+        <item>百度地图</item>
+        <item>腾讯地图</item>
+    </string-array>
+
+    <string-array name="map_package_name">
+        <item>com.autonavi.minimap</item>
+        <item>com.baidu.BaiduMap</item>
+        <item>com.tencent.map</item>
+    </string-array>
+
+    <!--定位语句-->
+    <string-array name="map_dat">
+        <item>androidamap://poi?sourceApplication=接单易&amp;keywords=%s&amp;dev=0</item>
+        <item>baidumap://map/geocoder?src=接单易&amp;address=%s</item>
+        <item>qqmap://map/search?keyword=%s&amp;center=CurrentLocation</item>
+    </string-array>
+
+    <!--路线规划语句-->
+    <string-array name="map_navigation">
+        <item>amapuri://route/plan/?dlat=%1f&amp;dlon=%2f&amp;dname=%s&amp;dev=0&amp;t=0</item>
+        <item>baidumap://map/direction?1=%f&amp;1=%f&amp;destination=%s</item>
+        <item>qqmap://map/routeplan?type=drive&amp;fromcoord=CurrentLocation&amp;tocoord=%1f,%2f&amp;to=%s&amp;referer=RLSBZ-4MQLP-TNUDE-L7AIL-7T7AZ-SJBVY</item>
+    </string-array>
+
+</resources>
