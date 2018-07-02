@@ -1,1 +1,1 @@
-include ':app', ':testtimer', ':comprocessvedio',':lib-permission', ':testmap', ':testupload',':imagepicker', ':testmediapicker'
+include ':app', ':testtimer', ':comprocessvedio',':lib-permission', ':testmap', ':testupload',':imagepicker', ':testmediapicker',':QiniuUploadDemo', ':testqiniu', ':lib-upload-qiniu'

@@ -8,12 +8,15 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/QiniuUploadDemo" />
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/comprocessvedio" />
             <option value="$PROJECT_DIR$/imagepicker" />
             <option value="$PROJECT_DIR$/lib-permission" />
+            <option value="$PROJECT_DIR$/lib-upload-qiniu" />
             <option value="$PROJECT_DIR$/testmap" />
             <option value="$PROJECT_DIR$/testmediapicker" />
+            <option value="$PROJECT_DIR$/testqiniu" />
             <option value="$PROJECT_DIR$/testtimer" />
             <option value="$PROJECT_DIR$/testupload" />
           </set>
