@@ -9,6 +9,6 @@ import java.util.List;
  * <p>@for : 获取媒体文件回调</p>
  * <p></p>
  */
-public interface OnMediaLoadedListener {
-    void onMediaLoaded(List<MediaFloder> imageFolders);
+public interface OnMediaLoadedListener<T extends AbsMediaFolder> {
+    void onMediaLoaded(List<T> imageFolders);
 }
