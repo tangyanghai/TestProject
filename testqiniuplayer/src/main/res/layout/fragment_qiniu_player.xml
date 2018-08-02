@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <!--android:background="@android:color/black"-->
+
+    <com.pili.pldroid.player.widget.PLVideoTextureView
+        android:id="@+id/PLVideoView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center" />
+
+    <RelativeLayout
+        android:id="@+id/fragment_play_control"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="visible">
+
+        <!--android:background="#aa000000"-->
+        <ImageView
+            android:id="@+id/img_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:padding="@dimen/margin_side_big"
+            android:src="@drawable/icon_back" />
+
+
+        <LinearLayout
+            android:id="@+id/control"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="#aa000000"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp">
+
+            <CheckBox
+                android:id="@+id/img_video_start"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/margin_side_middle"
+                android:layout_marginStart="@dimen/margin_side_big"
+                android:button="@drawable/bg_img_fragment_hnplay_play" />
+
+            <TextView
+                android:id="@+id/tv_current_duration"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="#00FFFFFF"
+                android:gravity="left|center_vertical"
+                android:paddingLeft="2dp"
+                android:text="00:00"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@android:color/white" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="#00FFFFFF"
+                android:gravity="left|center_vertical"
+                android:text="/"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@android:color/white" />
+
+            <TextView
+                android:id="@+id/tv_total_duration"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginRight="10dp"
+                android:background="#00FFFFFF"
+                android:gravity="left|center_vertical"
+                android:text="00:00"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@android:color/white" />
+
+            <SeekBar
+                android:id="@+id/video_seek_bar"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:focusable="true"
+                android:maxHeight="3dp"
+                android:minHeight="3dp"
+                android:paddingEnd="0dp"
+                android:paddingStart="0dp"
+                android:progress="0"
+                android:progressDrawable="@drawable/seekbar_style"
+                android:thumb="@drawable/seek_thumb"
+                android:thumbOffset="0dip" />
+
+            <CheckBox
+                android:id="@+id/img_video_fullscreen"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/margin_side_big"
+                android:layout_marginStart="@dimen/margin_side_middle"
+                android:button="@drawable/bg_img_fragment_hnplay_enlarge" />
+        </LinearLayout>
+
+        <View
+            android:id="@+id/control_hider"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignTop="@+id/control"
+            android:clickable="true" />
+    </RelativeLayout>
+
+</RelativeLayout>

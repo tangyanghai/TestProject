@@ -62,7 +62,6 @@ public class MainActivity extends AppCompatActivity {
         Toast.makeText(this, "deny", Toast.LENGTH_SHORT).show();
     }
 
-
     /**
      * 获取音乐文件
      */

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--顶部高度-->
+    <dimen name="height_tab">44dp</dimen>
+
+    <!--页边距-->
+    <dimen name="margin_side_big">16dp</dimen>
+    <dimen name="margin_side_middle">10dp</dimen>
+    <dimen name="margin_side_small">5dp</dimen>
+
+    <!--字体大小 - 始-->
+    <!--页面标题-->
+    <dimen name="textsize_1">18sp</dimen>
+    <!--主题  tab名-->
+    <dimen name="textsize_2">16sp</dimen>
+    <!--说明-->
+    <dimen name="textsize_3">14sp</dimen>
+    <!--说明-->
+    <dimen name="textsize_4">12sp</dimen>
+    <dimen name="smarttab_height">60dp</dimen>
+    <!--搜索页面-->
+    <dimen name="common_dp_3">3dp</dimen>
+    <dimen name="common_dp_5">5dp</dimen>
+    <dimen name="common_dp_6">6dp</dimen>
+    <dimen name="common_dp_8">8dp</dimen>
+    <dimen name="common_dp_10">10dp</dimen>
+    <dimen name="common_dp_12">12dp</dimen>
+    <dimen name="common_dp_15">15dp</dimen>
+    <dimen name="common_dp_20">20dp</dimen>
+    <dimen name="common_dp_25">25dp</dimen>
+    <dimen name="common_dp_30">30dp</dimen>
+    <dimen name="common_dp_35">35dp</dimen>
+    <dimen name="common_dp_40">40dp</dimen>
+    <dimen name="common_dp_50">50dp</dimen>
+    <dimen name="common_dp_60">60dp</dimen>
+    <dimen name="common_dp_80">80dp</dimen>
+    <dimen name="common_dp_100">100dp</dimen>
+    <dimen name="common_sp_15">15sp</dimen>
+    <dimen name="common_sp_16">16sp</dimen>
+    <dimen name="common_sp_14">14sp</dimen>
+    <!--登录页面的输入框边距-->
+    <dimen name="login_edittext_margin">40dp</dimen>
+    <!--字体大小 - 终-->
+</resources>

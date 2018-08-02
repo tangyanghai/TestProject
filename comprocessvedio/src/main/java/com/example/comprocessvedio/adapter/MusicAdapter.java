@@ -4,7 +4,7 @@ import android.text.TextUtils;
 import android.view.View;
 
 import com.example.comprocessvedio.MainActivity;
-import com.example.comprocessvedio.NotifyHintVoiceManager;
+import com.example.comprocessvedio.AudioManager;
 import com.example.comprocessvedio.R;
 
 import java.util.List;
@@ -42,7 +42,7 @@ public class MusicAdapter extends BaseAdapter<MainActivity.Music> {
             public void onClick(View v) {
                 String url = music.getUrl();
                 if (!TextUtils.isEmpty(url)) {
-                    NotifyHintVoiceManager.play(url);
+                    AudioManager.play(url);
                 }
             }
         });

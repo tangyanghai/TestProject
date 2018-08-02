@@ -10,8 +10,14 @@
    <Button
        android:layout_width="match_parent"
        android:layout_height="80dp"
-       android:text="选择照片"
-       android:onClick="choosePictures"
+       android:text="选择视频"
+       android:onClick="chooseVideo"
+       />
+ <Button
+       android:layout_width="match_parent"
+       android:layout_height="80dp"
+       android:text="选择音频"
+       android:onClick="chooseAudio"
        />
 
 </LinearLayout>
