@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -29,7 +30,9 @@ import com.lzy.imagepicker.mediapicker.loader.AbsMediaItem;
 import com.lzy.imagepicker.mediapicker.loader.OnMediaLoadedListener;
 import com.lzy.imagepicker.ui.ImageBaseActivity;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -43,6 +46,8 @@ public abstract class MediaBaseActivity<T extends AbsMediaItem, P extends AbsMed
     protected static final String KEY_SELECTED_ITME = "selectedItem";
     //要查找的文件夹的路径
     protected static final String KEY_SELECTED_FOLDER_PAHT = "folderPath";
+    //最大文件数量
+    protected static final String KEY_MAX_FILES = "maxFiles";
 
 
     public static final int TYPE_AUDIO = 1;
@@ -51,8 +56,10 @@ public abstract class MediaBaseActivity<T extends AbsMediaItem, P extends AbsMed
     /**
      * @param fileType {@link #TYPE_AUDIO,#TYPE_VIDEO}
      */
-    public static void start(Context context, int fileType) {
+    public static void start(Context context, int fileType, ArrayList<String> paths, int maxFiles) {
         Intent intent = new Intent();
+        intent.putStringArrayListExtra(KEY_SELECTED_ITME, paths);
+        intent.putExtra(KEY_MAX_FILES, maxFiles);
         Class cls;
         switch (fileType) {
             case 1://音频
@@ -83,7 +90,9 @@ public abstract class MediaBaseActivity<T extends AbsMediaItem, P extends AbsMed
     List<P> mAllFolders;//所有文件夹列表
     P mCurrentFolders;//当前显示的文件夹
     N mDataSource;
+    int maxFiles;
     private Adapter mAdapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,8 +103,15 @@ public abstract class MediaBaseActivity<T extends AbsMediaItem, P extends AbsMed
     }
 
     private void initData() {
+        maxFiles = getIntent().getIntExtra(KEY_MAX_FILES, -1);
+        if (maxFiles == -1) {
+            maxFiles = Integer.MAX_VALUE;
+        }
         //获取外界传入的已经选择的数据
-        mSelectedPathsComeIn = (List<String>) getIntent().getSerializableExtra(KEY_SELECTED_ITME);
+        String[] stringArrayExtra = getIntent().getStringArrayExtra(KEY_SELECTED_ITME);
+        if (stringArrayExtra != null) {
+            mSelectedPathsComeIn = Arrays.asList(stringArrayExtra);
+        }
         mSelectedItems = new ArrayList<>();
         String path = getIntent().getStringExtra(KEY_SELECTED_FOLDER_PAHT);
         mDataSource = initDataSource(path, new OnMediaLoadedListener<P>() {
@@ -154,7 +170,7 @@ public abstract class MediaBaseActivity<T extends AbsMediaItem, P extends AbsMed
         mRvMedias.setLayoutManager(new LinearLayoutManager(this));
 //        mRvMedias.setLayoutManager(new GridLayoutManager(this, getImageCols()));
         mRvMedias.addItemDecoration(new MyItemDecoration());
-        mAdapter = new Adapter();
+        mAdapter = new Adapter(this);
         mRvMedias.setAdapter(mAdapter);
     }
 
@@ -177,7 +193,24 @@ public abstract class MediaBaseActivity<T extends AbsMediaItem, P extends AbsMed
     }
 
 
-    class Adapter extends RecyclerView.Adapter<Holder> {
+    public void notifyItemChanged(final int position) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (mAdapter != null) {
+                    mAdapter.notifyItemChanged(position, 1);
+                }
+            }
+        });
+    }
+
+    static class Adapter<T extends AbsMediaItem> extends RecyclerView.Adapter<Holder> {
+
+        WeakReference<MediaBaseActivity> activity;
+
+        public Adapter(MediaBaseActivity activity) {
+            this.activity = new WeakReference<>(activity);
+        }
 
         @Override
         public Holder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -187,27 +220,65 @@ public abstract class MediaBaseActivity<T extends AbsMediaItem, P extends AbsMed
 
         @Override
         public void onBindViewHolder(final Holder holder, int position) {
-            try {
-                T t = mCurrentFolders.getMedias().get(position);
-                setItemIcon(t, holder.mImg);
-                holder.mTitle.setText(t.name);
-                holder.mAddTime.setText(t.addTime + "");
-                holder.mSize.setText(t.size + "");
-            } catch (Exception e) {
-                //
+
+        }
+
+        @Override
+        public void onBindViewHolder(Holder holder, int position, List<Object> payloads) {
+            if (activity.get() == null) {
+                return;
+            }
+
+            final T t = (T) activity.get().mCurrentFolders.getMedias().get(position);
+            if (payloads.size() == 0) {
+                try {
+                    boolean selected = activity.get().mSelectedItems.contains(t);
+                    holder.mCB.setOnCheckedChangeListener(null);
+                    holder.mCB.setChecked(selected);
+                    holder.mCB.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                        @Override
+                        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                            if (isChecked) {
+                                if (!activity.get().mSelectedItems.contains(t) && activity.get().mSelectedItems.size() < activity.get().maxFiles) {
+                                    activity.get().mSelectedItems.add(t);
+                                }
+                            } else {
+                                if (activity.get().mSelectedItems.contains(t)) {
+                                    activity.get().mSelectedItems.remove(t);
+                                }
+                            }
+                        }
+                    });
+                    activity.get().setItemIcon(t.path, position, holder.mImg);
+                    holder.mTitle.setText(t.name);
+                    holder.mAddTime.setText(t.addTime + "");
+                    holder.mSize.setText(t.size + "");
+                } catch (Exception e) {
+                    //
+                }
+            } else {
+                Object o = payloads.get(0);
+                if (o instanceof Integer) {
+                    if ((Integer) o == 1) {
+                        activity.get().setItemIcon(t.path, position, holder.mImg);
+                    }
+                }
             }
         }
 
         @Override
         public int getItemCount() {
-            return mCurrentFolders == null ? 0 : mCurrentFolders.getMedias().size();
+            if (activity.get() == null) {
+                return 0;
+            }
+            return activity.get().mCurrentFolders == null ? 0 : activity.get().mCurrentFolders.getMedias().size();
         }
     }
 
-    protected abstract void setItemIcon(T t, ImageView mImg);
+    protected abstract void setItemIcon(String path, int position, ImageView img);
 
 
-    class Holder extends RecyclerView.ViewHolder {
+    static class Holder extends RecyclerView.ViewHolder {
 
         ImageView mImg;
         CheckBox mCB;
@@ -239,9 +310,13 @@ public abstract class MediaBaseActivity<T extends AbsMediaItem, P extends AbsMed
             int itemCount = state.getItemCount();
             int pos = parent.getChildAdapterPosition(view);
             //设定底部边距为1px
-            outRect.set(0, 0, 0, pos == itemCount - 1 ? 0 :20);
+            outRect.set(0, 0, 0, pos == itemCount - 1 ? 0 : 20);
         }
 
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
 }

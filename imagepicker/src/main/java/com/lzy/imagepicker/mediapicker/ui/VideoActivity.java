@@ -4,7 +4,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
-import android.util.LruCache;
 import android.widget.ImageView;
 
 import com.lzy.imagepicker.R;
@@ -12,11 +11,11 @@ import com.lzy.imagepicker.mediapicker.loader.OnMediaLoadedListener;
 import com.lzy.imagepicker.mediapicker.loader.video.VideoDataSource;
 import com.lzy.imagepicker.mediapicker.loader.video.VideoFolder;
 import com.lzy.imagepicker.mediapicker.loader.video.VideoItem;
+import com.lzy.imagepicker.mediapicker.util.BitmapCacheUtil;
+import com.lzy.imagepicker.mediapicker.util.VideoUtils;
 
-import java.lang.ref.WeakReference;
-import java.util.Map;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * <p>@author : tyh</p>
@@ -26,69 +25,54 @@ import java.util.concurrent.Executors;
  */
 @RequiresApi(api = Build.VERSION_CODES.HONEYCOMB_MR1)
 public class VideoActivity extends MediaBaseActivity<VideoItem, VideoFolder, VideoDataSource> {
+
+    private static final String TAG = "VideoActivity";
+    private Set<String> mPathLoadPic;
+
+
     @Override
     protected VideoDataSource initDataSource(String path, OnMediaLoadedListener<VideoFolder> listener) {
+        mPathLoadPic =new HashSet<>();
         return new VideoDataSource(this, path, listener);
     }
 
     @Override
-    protected void setItemIcon(final VideoItem videoItem, final ImageView img) {
-        if (mCache != null) {
-            Bitmap bitmap = mCache.get(videoItem.path);
-            if (bitmap != null) {
-                img.setImageBitmap(bitmap);
-                return;
-            }
-
-            mExecutors.execute(new ThumbRunnable(videoItem, new OnThumbGetListener() {
-                @Override
-                public void onThumbGet(final Bitmap b) {
-
-                    if (b != null) {
-                        mCache.put(videoItem.path, b);
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                img.setImageBitmap(b);
-                            }
-                        });
-                    } else {
-                        final Bitmap bitmap1 = BitmapFactory.decodeResource(getResources(), R.mipmap.default_image);
-                        mCache.put(videoItem.path, bitmap1);
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                img.setImageBitmap(bitmap1);
-                            }
-                        });
-                    }
+    protected void setItemIcon(final String path, final int position, final ImageView img) {
+        mPathLoadPic.add(path);
+        Bitmap bitmap = VideoUtils.getInstance().getThumbForLocalVideo(TAG,path, new VideoUtils.OnGetBitmapListener() {
+            @Override
+            public void onGetBitmap(String path, Bitmap bitmap) {
+                if (bitmap == null) {
+                    bitmap = BitmapFactory.decodeResource(VideoActivity.this.getResources(), R.mipmap.default_image);
+                    BitmapCacheUtil.getInstance().putBitmap(path, bitmap);
                 }
-            }));
+                final Bitmap bitmap1 = bitmap;
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        img.setImageBitmap(bitmap1);
+                    }
+                });
+            }
+        });
+
+        if (bitmap != null) {
+            img.setImageBitmap(bitmap);
+
         }
+
     }
 
-    private LruCache<String, Bitmap> mCache = new LruCache<>(50);
 
-    private ExecutorService mExecutors = Executors.newFixedThreadPool(10);
-
-    static class ThumbRunnable implements Runnable {
-        VideoItem videoItem;
-        OnThumbGetListener listener;
-
-        public ThumbRunnable(VideoItem videoItem, OnThumbGetListener listener) {
-            this.videoItem = videoItem;
-            this.listener = listener;
+    @Override
+    protected void onDestroy() {
+        VideoUtils.getInstance().closeExecutorServiceByTag(TAG);
+        //清除缓存了的图片--这里会去清除LruCache中缓存的Bitmap,但是不会清除界面上的ImageView中的Bitmap
+        for (String s : mPathLoadPic) {
+            BitmapCacheUtil.getInstance().remove(s);
         }
-
-        @Override
-        public void run() {
-            Bitmap smallIcon = videoItem.getSmallIcon();
-            listener.onThumbGet(smallIcon);
-        }
-    }
-
-    private interface OnThumbGetListener {
-        void onThumbGet(Bitmap bitmap);
+        mPathLoadPic.clear();
+        super.onDestroy();
     }
 
 }

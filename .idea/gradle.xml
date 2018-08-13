@@ -15,11 +15,15 @@
             <option value="$PROJECT_DIR$/lib-permission" />
             <option value="$PROJECT_DIR$/lib-upload-qiniu" />
             <option value="$PROJECT_DIR$/qqheader" />
+            <option value="$PROJECT_DIR$/testchain" />
+            <option value="$PROJECT_DIR$/testconstraintlayout" />
             <option value="$PROJECT_DIR$/testexpandablelist" />
             <option value="$PROJECT_DIR$/testjni" />
+            <option value="$PROJECT_DIR$/testlayoutmanager" />
             <option value="$PROJECT_DIR$/testmap" />
             <option value="$PROJECT_DIR$/testmediacodec" />
             <option value="$PROJECT_DIR$/testmediapicker" />
+            <option value="$PROJECT_DIR$/testmemory" />
             <option value="$PROJECT_DIR$/testqiniu" />
             <option value="$PROJECT_DIR$/testqiniuplayer" />
             <option value="$PROJECT_DIR$/testtextviewhtml" />

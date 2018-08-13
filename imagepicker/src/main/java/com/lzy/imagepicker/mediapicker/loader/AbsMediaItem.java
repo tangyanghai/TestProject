@@ -35,7 +35,7 @@ public abstract class AbsMediaItem {
     @Override
     public boolean equals(Object o) {
         try {
-            ImageItem other = (ImageItem) o;
+            AbsMediaItem other = (AbsMediaItem) o;
             return this.path.equalsIgnoreCase(other.path) && this.addTime == other.addTime;
         } catch (ClassCastException e) {
             e.printStackTrace();

@@ -27,10 +27,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void chooseVideo(View view) {
-       MediaBaseActivity.start(this,MediaBaseActivity.TYPE_VIDEO);
+       MediaBaseActivity.start(this,MediaBaseActivity.TYPE_VIDEO,null,10);
     }
 
     public void chooseAudio(View view) {
-        MediaBaseActivity.start(this,MediaBaseActivity.TYPE_AUDIO);
+        MediaBaseActivity.start(this,MediaBaseActivity.TYPE_AUDIO,null,13);
     }
 }

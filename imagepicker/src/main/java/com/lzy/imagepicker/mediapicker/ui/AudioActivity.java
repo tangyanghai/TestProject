@@ -20,7 +20,7 @@ public class AudioActivity extends MediaBaseActivity<AudioItem,AudioFolder,Audio
     }
 
     @Override
-    protected void setItemIcon(AudioItem audioItem, ImageView mImg) {
+    protected void setItemIcon(String path,int position, ImageView mImg) {
 
     }
 }

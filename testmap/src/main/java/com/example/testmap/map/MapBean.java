@@ -1,5 +1,6 @@
 package com.example.testmap.map;
 
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
@@ -64,7 +65,11 @@ public class MapBean {
         intent.setAction(Intent.ACTION_VIEW);
         intent.setData(Uri.parse(String.format(uri, keyWord)));
         intent.setPackage(packageName);
-        context.startActivity(intent);
+        try {
+            context.startActivity(intent);
+        } catch (ActivityNotFoundException e) {
+            Log.e("=======", "open: 没找到地图 == " + packageName, null);
+        }
     }
 
     /**
@@ -76,11 +81,11 @@ public class MapBean {
     public void toNavigation(final Context context, final String toAddress) {
 
         if (name.equals("百度地图")) {//百度地图不需要经纬度,所以不要去定位
-           navagation(0,0,toAddress,context);
+            navagation(0, 0, toAddress, context);
             return;
         }
 
-        getPositonThenNavigation(context, toAddress,new GeocodeSearch.OnGeocodeSearchListener() {
+        getPositonThenNavigation(context, toAddress, new GeocodeSearch.OnGeocodeSearchListener() {
             @Override
             public void onRegeocodeSearched(RegeocodeResult regeocodeResult, int i) {
 
@@ -112,9 +117,10 @@ public class MapBean {
 
     /**
      * 获取目标地址编码信息
+     *
      * @param toAddress 目标地址
      */
-    private void getPositonThenNavigation(final Context context, final String toAddress,GeocodeSearch.OnGeocodeSearchListener listener) {
+    private void getPositonThenNavigation(final Context context, final String toAddress, GeocodeSearch.OnGeocodeSearchListener listener) {
         GeocodeSearch geocoderSearch = new GeocodeSearch(context);
         geocoderSearch.setOnGeocodeSearchListener(listener);
         // name表示地址，第二个参数表示查询城市，中文或者中文全拼，citycode、adcode
@@ -124,6 +130,7 @@ public class MapBean {
 
     /**
      * 路线规划到指定目的地
+     *
      * @param latitude  目的地经度
      * @param longitude 目的地纬度
      * @param toAddress 目的地地址
@@ -131,7 +138,7 @@ public class MapBean {
     private void navagation(double latitude, double longitude, String toAddress, Context context) {
         Intent intent = new Intent();
         intent.setAction(Intent.ACTION_VIEW);
-        intent.setData(Uri.parse(String.format(navagationUri, latitude, longitude,toAddress)));
+        intent.setData(Uri.parse(String.format(navagationUri, latitude, longitude, toAddress)));
         intent.setPackage(packageName);
         context.startActivity(intent);
     }
